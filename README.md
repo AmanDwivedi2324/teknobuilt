@@ -341,7 +341,7 @@ A rejected page has `"form": null` and its reasons, e.g. `marked_void` and `no_f
 - **The cache** means re-running never pays again. It's keyed by the image, model, prompt version and form layout,
   so changing the prompt automatically invalidates old replies.
 - **Speed:** with cached replies, the whole sample PDF (4 pages) runs in about **3 seconds**, including Python
-  start-up. A live AI call took **15–30 seconds per page** on the free tier during testing; pages run in parallel.
+  start-up. A live AI call took **about 20–30 seconds per page** on the free tier during testing; pages run in parallel.
 - **Memory:** pages are streamed, and at most `2 × MAX_WORKERS` pages are held at once.
 - **At scale:** the next saving would be to send flagged pages to a stronger model only when needed, and to use the
   provider's batch API (cheaper, not real-time) for overnight jobs.
