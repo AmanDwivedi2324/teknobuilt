@@ -1,9 +1,4 @@
-"""Step 2: quality gate. Decide, before any model call, whether a page is worth processing.
-
-Rule of thumb: if the form's table grid is still visible, process the page and flag what is
-wrong with it; if it is not, reject the page. Rejected pages cost nothing and can't be
-"read" into invented data.
-"""
+# Step 2: quality gate before any AI
 
 from dataclasses import dataclass, field
 
@@ -12,14 +7,14 @@ import numpy as np
 
 from .models import Issue, Severity
 
-# Thresholds, calibrated on the sample pages plus synthetic damaged copies (see README).
-MIN_SIDE_PX = 500  # smaller than this is not a usable scan
-MIN_INK = 0.003  # less dark ink than this: blank page
-MAX_INK = 0.70  # more than this: almost entirely dark (mud, shadow, bad scan)
-DIRTY_INK = 0.15  # above this, keep going but flag the page
-MIN_GRID_LINES = 20  # a real form has a table grid made of long straight lines
-MIN_SHARPNESS = 100.0  # below this the scan is blurry (rough signal: noise raises it)
-MAX_SKEW_DEG = 15.0  # alignment straightens any tilt; bigger tilts are just noted
+# thresholds tuned on sample pages
+MIN_SIDE_PX = 500  # smaller: not a usable scan
+MIN_INK = 0.003  # below this: blank page
+MAX_INK = 0.70  # above this: too dark
+DIRTY_INK = 0.15  # above this: flag as dirty
+MIN_GRID_LINES = 20  # fewer: not a form
+MIN_SHARPNESS = 100.0  # below this: blurry
+MAX_SKEW_DEG = 15.0  # bigger tilt: just note it
 FAIL_PHRASES = ("FAILED TEST", "VOID", "DO NOT USE")
 
 
@@ -37,18 +32,18 @@ class QualityReport:
         return float(self.metrics.get("skew_deg", 0.0))
 
 
+# cheap image stats, no AI
 def measure(gray: np.ndarray) -> dict[str, float | int]:
-    """Cheap image statistics. No AI involved."""
     h, w = gray.shape
     ink_ratio = float((gray < 128).mean())
     sharpness = float(cv2.Laplacian(gray, cv2.CV_64F).var())
 
-    # Long straight lines (the form's table grid). Works at any rotation.
+    # count long straight table lines
     ink = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 31, 15)
     lines = cv2.HoughLinesP(ink, 1, np.pi / 360, threshold=200, minLineLength=w // 4, maxLineGap=5)
-    lines = [] if lines is None else lines.reshape(-1, 4)  # shape differs across OpenCV versions
+    lines = [] if lines is None else lines.reshape(-1, 4)
 
-    # Skew = typical angle of those lines, folded so vertical lines count too.
+    # skew from the line angles
     angles = [np.degrees(np.arctan2(y2 - y1, x2 - x1)) for x1, y1, x2, y2 in lines]
     folded = [((a + 45) % 90) - 45 for a in angles]
     skew = float(np.median(folded)) if folded else 0.0
@@ -61,6 +56,7 @@ def measure(gray: np.ndarray) -> dict[str, float | int]:
     }
 
 
+# decide: reject, flag, or pass
 def check_quality(gray: np.ndarray | None, text_layer: str = "") -> QualityReport:
     if gray is None or gray.ndim != 2 or min(gray.shape) < MIN_SIDE_PX:
         return QualityReport(
@@ -81,6 +77,7 @@ def check_quality(gray: np.ndarray | None, text_layer: str = "") -> QualityRepor
             _issue("no_form_grid", "no form grid found (not a safety form, or too damaged)", Severity.REJECT)
         )
 
+    # warnings only for usable pages
     rejected = any(i.severity is Severity.REJECT for i in issues)
     if m["ink_ratio"] > DIRTY_INK and not rejected:
         issues.append(_issue("dirty_page", "page is dirty; some fields may be unreadable", Severity.REVIEW))

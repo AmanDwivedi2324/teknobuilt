@@ -1,4 +1,4 @@
-"""Command line entry point: `python -m form_digitizer [pdf] [-o results.json]`."""
+# Command line: python -m form_digitizer
 
 import argparse
 import logging
@@ -31,14 +31,16 @@ def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(
         level=settings.log_level.upper(), format="%(asctime)s %(levelname)-7s %(name)s: %(message)s"
     )
-    for noisy in ("httpx", "httpx2", "google_genai"):  # per-request HTTP logs drown out the pipeline's own
+    for noisy in ("httpx", "httpx2", "google_genai"):  # hide HTTP request logs
         logging.getLogger(noisy).setLevel(logging.WARNING)
 
     result = Pipeline(settings, build_reader(settings), debug_dir=args.debug_dir).run(args.pdf)
 
+    # save results
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(result.model_dump_json(indent=2), encoding="utf-8")
 
+    # print short summary
     s = result.summary
     print(f"\n{result.source_file}: {s.pages} pages -> {s.ok} ok, ", end="")
     print(f"{s.needs_review} needs review, {s.rejected} rejected")

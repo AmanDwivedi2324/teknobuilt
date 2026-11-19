@@ -1,10 +1,4 @@
-"""Robustness report: damage the sample pages on purpose and see how the pipeline copes.
-
-Covers the deterministic part (quality gate -> alignment -> checkbox reading), compared with
-what is really marked on the forms. The headline column is "wrong, not flagged": it must be 0.
-
-    python scripts/stress_test.py
-"""
+# Damage pages on purpose, check results
 
 import sys
 from pathlib import Path
@@ -31,8 +25,8 @@ def cell(row: int, column: str) -> tuple[int, int, int, int]:
     return x0, y0, x1, round(y0 + L.row_pitch)
 
 
+# cross out row 4, double-mark row 6
 def edited(page: np.ndarray) -> np.ndarray:
-    """Page 1 with row 4's answer scribbled out and re-marked, and two marks in row 6."""
     aligned = align_page(page, 0).aligned.copy()
     scribble(aligned, cell(4, "R"))
     draw_x(aligned, cell(4, "S"))
@@ -40,6 +34,7 @@ def edited(page: np.ndarray) -> np.ndarray:
     return aligned
 
 
+# run one case, return table row
 def evaluate(name: str, image: np.ndarray, truth_page: int) -> str:
     gate = check_quality(image)
     if gate.rejected:
@@ -58,7 +53,7 @@ def evaluate(name: str, image: np.ndarray, truth_page: int) -> str:
     flagged = sum(g.needs_review for g in groups)
     silent = sum(g.value != w and not g.needs_review for g, w in zip(groups, want, strict=True))
     if name.startswith("Crossed-out"):
-        silent = sum(  # rows 4 and 6 were changed on purpose; judge them by "flagged", not "correct"
+        silent = sum(  # skip rows changed on purpose
             g.value != w and not g.needs_review and i not in (5, 7)
             for i, (g, w) in enumerate(zip(groups, want, strict=True))
         )

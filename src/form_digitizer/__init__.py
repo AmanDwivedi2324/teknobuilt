@@ -1,3 +1,3 @@
-"""Digitize scanned, handwritten construction safety observation forms into validated JSON."""
+# Safety form digitizer package
 
 __version__ = "1.0.0"

@@ -1,3 +1,5 @@
+# Tests for validation and cross-check
+
 from datetime import date
 
 import pytest
@@ -17,7 +19,7 @@ SHIFTS = DEFAULT_LAYOUT.shift_boxes
     ("raw", "iso", "code"),
     [
         ("2024-10-02", "2024-10-02", None),
-        ("25/10/2024", "2024-10-25", None),  # only day-first makes sense
+        ("25/10/2024", "2024-10-25", None),  # day-first only
         ("02/10/2024", None, "ambiguous_date"),  # 2 Oct or 10 Feb?
         ("2031-01-01", "2031-01-01", "implausible_date"),
         ("next tuesday", None, "invalid_date"),

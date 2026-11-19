@@ -1,3 +1,5 @@
+# Shared test fixtures and truth
+
 from pathlib import Path
 
 import pytest
@@ -9,7 +11,7 @@ from form_digitizer.quality import check_quality
 
 SAMPLE_PDF = Path(__file__).parents[1] / "data" / "Sample_input.pdf"
 
-# What is actually marked on the three sample forms (checked by eye against the PDF).
+# what is really marked on the samples
 TRUTH = {
     1: {
         "location": "8000",
@@ -53,5 +55,5 @@ def aligned_pages(sample_pages):
 
 @pytest.fixture
 def settings(tmp_path):
-    """Settings isolated from the developer's .env: no key, temp cache."""
+    # no key, temp cache
     return Settings(_env_file=None, gemini_api_key=None, cache_dir=tmp_path / "cache", max_workers=2)

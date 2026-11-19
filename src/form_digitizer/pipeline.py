@@ -1,4 +1,4 @@
-"""Runs every step on every page and collects the results. One bad page never stops a run."""
+# Runs all steps on every page
 
 import logging
 from collections import deque
@@ -36,11 +36,11 @@ class Pipeline:
         self.layout = layout
         self.debug_dir = debug_dir
 
-    # ------------------------------------------------------------ one page
+    # one page; never crash the run
     def process_page(self, page: RenderedPage) -> PageResult:
         try:
             return self._process_page(page)
-        except Exception as exc:  # a bug or a truly unexpected input: record it, keep going
+        except Exception as exc:
             logger.exception("page %d failed", page.number)
             issue = Issue(
                 code="processing_error", message=f"{type(exc).__name__}: {exc}", severity=Severity.REVIEW
@@ -56,7 +56,7 @@ class Pipeline:
             )
             return PageResult(page=page.number, status="rejected", issues=[issue], form=None)
 
-        # Step 2: reject garbage before spending anything on it
+        # step 2: reject garbage early
         quality = check_quality(page.image, page.text_layer)
         if quality.rejected:
             logger.info("page %d rejected: %s", page.number, [i.code for i in quality.issues])
@@ -65,7 +65,7 @@ class Pipeline:
             )
         issues = list(quality.issues)
 
-        # Step 3 + 4: line the page up, then count ink in every box
+        # steps 3-4: align, read checkboxes
         alignment = align_page(page.image, quality.skew_deg, self.layout)
         pixel = None
         if alignment.ok:
@@ -80,11 +80,11 @@ class Pipeline:
                 )
             )
 
-        # Step 5: handwriting
+        # step 5: read handwriting
         image_for_model = alignment.aligned if alignment.ok else page.image
         read = self.reader.read(encode_image(image_for_model, self.settings.llm_send_width_px))
 
-        # Step 6: validate and cross-check
+        # step 6: validate and cross-check
         form, form_issues = build_form(pixel, read, self.layout)
         issues += form_issues
 
@@ -113,7 +113,7 @@ class Pipeline:
         if aligned is not None:
             cv2.imwrite(str(self.debug_dir / f"page_{page.number:03d}_aligned.png"), aligned)
 
-    # ------------------------------------------------------------ whole file
+    # whole PDF
     def run(self, pdf_path: Path) -> RunResult:
         errors: list[str] = []
         try:
@@ -140,12 +140,8 @@ class Pipeline:
             errors=errors,
         )
 
+    # parallel pages, order kept, memory bounded
     def _process_all(self, pages: Iterable[RenderedPage]) -> list[PageResult]:
-        """Process pages in parallel (model calls are slow I/O) while keeping page order.
-
-        Pages are rendered one by one on this thread (PyMuPDF is not thread-safe), and at
-        most 2 x max_workers pages are in memory at once, so a 500-page PDF is fine too.
-        """
         results: list[PageResult] = []
         in_flight: deque[Future[PageResult]] = deque()
         with ThreadPoolExecutor(max_workers=self.settings.max_workers) as pool:

@@ -1,39 +1,36 @@
-"""Where everything sits on the form, in the standard frame produced by alignment.
-
-All positions were measured once on a clean, aligned sample page. Supporting a new form
-version means adding another FormLayout here; no pipeline code has to change.
-"""
+# Box positions on the form (measured once)
 
 from dataclasses import dataclass
 
-Box = tuple[int, int, int, int]  # x0, y0, x1, y1 in pixels
-Span = tuple[int, int]  # start, end in pixels
+Box = tuple[int, int, int, int]  # x0, y0, x1, y1
+Span = tuple[int, int]  # start, end
 
 
 @dataclass(frozen=True)
 class FormLayout:
     name: str
-    canvas_size: tuple[int, int]  # width, height of the standard frame
+    canvas_size: tuple[int, int]  # width, height
 
-    # Table lines every form of this type has; used to fine-tune and verify alignment.
+    # lines every form has
     expected_lines_x: tuple[int, ...]
     expected_lines_y: tuple[int, ...]
 
     location_boxes: dict[str, Box]
     shift_boxes: dict[str, Box]
 
-    checklist_columns: dict[str, Span]  # rating code -> x span
-    checklist_top: int  # y of the top line of row 1
-    row_pitch: float  # row height
+    checklist_columns: dict[str, Span]
+    checklist_top: int
+    row_pitch: float
     max_rows: int
 
     expectation_questions: tuple[str, ...]
-    expectation_columns: dict[str, Span]  # answer -> x span
+    expectation_columns: dict[str, Span]
     expectation_rows_y: tuple[Span, ...]
 
 
 RATING_LABELS = {"S": "Safe", "R": "At Risk", "I": "Imminent Hazard", "N": "N/A"}
 
+# the PACE safety observation form
 SAFETY_OBSERVATION_V1 = FormLayout(
     name="pace-safety-observation-v1",
     canvas_size=(1654, 2339),  # A4 at 200 DPI
@@ -73,7 +70,7 @@ SAFETY_OBSERVATION_V1 = FormLayout(
     checklist_columns={"S": (1151, 1274), "R": (1274, 1397), "I": (1397, 1520), "N": (1520, 1640)},
     checklist_top=656,
     row_pitch=77.9,
-    max_rows=15,  # the blank template has 15 rows; filled forms use fewer
+    max_rows=15,  # template has 15 rows
     expectation_questions=(
         "Has positive feedback provided?",
         "Has the job been stopped in the event of an imminent hazard?",

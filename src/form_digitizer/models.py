@@ -1,4 +1,4 @@
-"""Data shapes shared across the pipeline, including the final JSON output."""
+# Shared data shapes and output JSON
 
 from datetime import datetime
 from enum import Enum
@@ -8,11 +8,9 @@ from pydantic import BaseModel, Field
 
 
 class Severity(str, Enum):
-    """How much an issue matters for the page's final status."""
-
-    REJECT = "reject"  # page is unusable; nothing is extracted from it
-    REVIEW = "review"  # data extracted, but a person must check it
-    INFO = "info"  # worth recording, no action needed
+    REJECT = "reject"  # unusable page
+    REVIEW = "review"  # person must check
+    INFO = "info"  # just a note
 
 
 class Issue(BaseModel):
@@ -25,6 +23,7 @@ class Issue(BaseModel):
 PageStatus = Literal["ok", "needs_review", "rejected"]
 
 
+# worst issue decides page status
 def status_from_issues(issues: list[Issue]) -> PageStatus:
     if any(i.severity is Severity.REJECT for i in issues):
         return "rejected"
@@ -33,7 +32,7 @@ def status_from_issues(issues: list[Issue]) -> PageStatus:
     return "ok"
 
 
-# ------------------------------------------------------------------ final output
+# final output shapes
 class ChecklistItem(BaseModel):
     row: int
     question: str | None

@@ -1,9 +1,4 @@
-"""Step 6: check every value, cross-check the checkboxes, and build the final form record.
-
-Two independent readings exist for every checkbox: pixel counting (Step 4) and the model
-(Step 5). When they agree we trust the answer; when they don't, the page goes to a person.
-Text fields are checked for format (dates, ID numbers) and for being present when required.
-"""
+# Step 6: validate values and cross-check checkboxes
 
 from datetime import date, datetime
 
@@ -33,11 +28,10 @@ def _review(code: str, message: str, field: str | None = None) -> Issue:
     return Issue(code=code, message=message, severity=Severity.REVIEW, field=field)
 
 
-# ------------------------------------------------------------------ text fields
+# clean text field, flag if missing
 def text_value(name: str, field: TextField, issues: list[Issue]) -> str | None:
-    """The cleaned value of a text field, adding an issue when it is missing or unreadable."""
     if field.status == "not_read":
-        return None  # one page-level issue already covers "no model reply"
+        return None  # already flagged once per page
     value = (field.value or "").strip()
     if field.status == "ok" and value:
         return value
@@ -48,8 +42,8 @@ def text_value(name: str, field: TextField, issues: list[Issue]) -> str | None:
     return None
 
 
+# handwritten date to ISO
 def parse_date(raw: str, today: date) -> tuple[str | None, Issue | None]:
-    """ISO date (YYYY-MM-DD) if the handwriting is an unambiguous, plausible date."""
     candidates = set()
     for fmt in DATE_FORMATS:
         try:
@@ -70,8 +64,8 @@ def parse_date(raw: str, today: date) -> tuple[str | None, Issue | None]:
     return parsed.isoformat(), None
 
 
+# ID numbers must be digits
 def clean_number(name: str, raw: str | None, issues: list[Issue]) -> str | None:
-    """ID numbers: digits only. Spaces and dashes are dropped; anything else is flagged."""
     if raw is None:
         return None
     digits = raw.replace(" ", "").replace("-", "")
@@ -81,15 +75,10 @@ def clean_number(name: str, raw: str | None, issues: list[Issue]) -> str | None:
     return digits
 
 
-# ------------------------------------------------------------------ checkboxes
+# combine pixel and model readings
 def merge_choice(
     field: str, pixel: ChoiceReading | None, model_value: str | None, have_model: bool, allowed
 ) -> tuple[str | None, list[Issue]]:
-    """Combine the pixel reading and the model's reading of one group of boxes.
-
-    A clean pixel reading wins (it is deterministic and calibrated); if the pixels are unsure,
-    the model's clear answer is used. Any disagreement is flagged, never silently resolved.
-    """
     issues: list[Issue] = []
     model: str | None = None
     if have_model and model_value not in (None, NONE):
@@ -101,6 +90,7 @@ def merge_choice(
             )
             model = UNCLEAR
 
+    # flag any disagreement
     if pixel is not None:
         issues += [_review("checkbox_unclear", flag, field) for flag in pixel.flags]
         if have_model and model != pixel.value:
@@ -114,6 +104,7 @@ def merge_choice(
     elif have_model and model == UNCLEAR:
         issues.append(_review("checkbox_unclear", "model could not tell which box is marked", field))
 
+    # clean pixels win, else model
     if pixel is not None and not pixel.flags:
         value = pixel.value
     elif model not in (None, UNCLEAR):
@@ -123,11 +114,10 @@ def merge_choice(
     return value, issues
 
 
-# ------------------------------------------------------------------ whole form
+# build the final form record
 def build_form(
     pixel: CheckboxReport | None, read: ReadResult, layout: FormLayout, today: date | None = None
 ) -> tuple[SafetyForm, list[Issue]]:
-    """Merge Step 4 and Step 5 into one validated record plus the issues found on the way."""
     today = today or date.today()
     issues: list[Issue] = []
     data, have_model = read.data, read.has_data
@@ -141,7 +131,7 @@ def build_form(
             _review("model_says_not_a_form", "the model does not recognise this page as the safety form")
         )
 
-    # Text fields
+    # text fields
     raw_date = text_value("observation_date", data.observation_date, issues)
     iso_date = None
     if raw_date is not None:
@@ -158,7 +148,7 @@ def build_form(
     )
     comments = text_value("comments", data.comments, issues)
 
-    # Checkbox groups
+    # checkbox groups
     def merge(field, pixel_reading, model_value, allowed):
         value, found = merge_choice(field, pixel_reading, model_value, have_model, allowed)
         issues.extend(found)
@@ -167,6 +157,7 @@ def build_form(
     location = merge("location_cwa", pixel.location if pixel else None, data.location, layout.location_boxes)
     shift = merge("shift", pixel.shift if pixel else None, data.shift, layout.shift_boxes)
 
+    # checklist rows
     pixel_rows = pixel.checklist if pixel else []
     model_rows = data.checklist if have_model else []
     if pixel and have_model and len(pixel_rows) != len(model_rows):
@@ -195,6 +186,7 @@ def build_form(
             )
         )
 
+    # Yes / No / N/A questions
     expectations = []
     for i, question in enumerate(layout.expectation_questions):
         model_row = data.expectations[i] if have_model and i < len(data.expectations) else None

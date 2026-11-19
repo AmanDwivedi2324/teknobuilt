@@ -1,3 +1,5 @@
+# Tests for checkbox reading
+
 import pytest
 from conftest import TRUTH
 from fakes import draw_x, rotate_cropped, scribble
@@ -48,9 +50,9 @@ def cell(row: int, column: str):
 
 def test_crossed_out_answer_and_double_mark(aligned_pages):
     page = aligned_pages[1].aligned.copy()
-    scribble(page, cell(4, "R"))  # the original answer (R) is scribbled out...
-    draw_x(page, cell(4, "S"))  # ...and S is marked instead
-    draw_x(page, cell(6, "N"))  # row 6 now has two marks (I and N)
+    scribble(page, cell(4, "R"))  # cross out R
+    draw_x(page, cell(4, "S"))  # mark S instead
+    draw_x(page, cell(6, "N"))  # second mark in row 6
 
     report = read_checkboxes(page)
     row4, row6 = report.checklist[3], report.checklist[5]

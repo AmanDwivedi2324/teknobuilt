@@ -1,4 +1,4 @@
-"""Step 5: read handwriting with a vision-language model (or a stand-in when there's no key)."""
+# Step 5: read handwriting
 
 import logging
 
@@ -13,10 +13,10 @@ logger = logging.getLogger(__name__)
 __all__ = ["Reader", "ReadResult", "build_reader", "encode_image"]
 
 
+# Gemini if key, else mock; cached
 def build_reader(settings: Settings, layout: FormLayout = DEFAULT_LAYOUT) -> CachedReader:
-    """Gemini when a key is configured, otherwise the mock; both behind the disk cache."""
     if settings.gemini_api_key is not None:
-        from .gemini import GeminiReader  # imported only when needed
+        from .gemini import GeminiReader
 
         inner: Reader = GeminiReader(
             api_key=settings.gemini_api_key.get_secret_value(),

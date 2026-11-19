@@ -1,4 +1,4 @@
-"""Stand-in reader for running without an API key: reads nothing, invents nothing."""
+# No-key reader: reads nothing
 
 from .base import ReadResult
 from .schema import empty_read

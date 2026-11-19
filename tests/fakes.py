@@ -1,11 +1,11 @@
-"""Synthetic damage applied to real sample pages, for robustness tests."""
+# Fake damage for robustness tests
 
 import cv2
 import numpy as np
 
 
 def rotate_cropped(img: np.ndarray, deg: float) -> np.ndarray:
-    """Rotate inside the same canvas, so corners fall off the 'scan' like a tilted page would."""
+    # tilt and cut corners off
     h, w = img.shape
     m = cv2.getRotationMatrix2D((w / 2, h / 2), deg, 1.0)
     return cv2.warpAffine(img, m, (w, h), borderValue=255)
@@ -25,7 +25,7 @@ def mud(img: np.ndarray, blobs: int, strength: float, seed: int = 0) -> np.ndarr
 
 
 def perspective(img: np.ndarray) -> np.ndarray:
-    """A phone photo taken at a slight angle."""
+    # phone photo at an angle
     h, w = img.shape
     src = np.float32([[0, 0], [w, 0], [w, h], [0, h]])
     dst = np.float32([[40, 30], [w - 10, 0], [w, h], [0, h - 40]])

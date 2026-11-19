@@ -1,3 +1,5 @@
+# Tests for the quality gate
+
 import numpy as np
 import pytest
 from fakes import rotate_cropped

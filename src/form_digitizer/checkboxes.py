@@ -1,4 +1,4 @@
-"""Step 4: read every checkbox by counting ink pixels inside it. No AI involved."""
+# Step 4: read checkboxes by counting ink
 
 from dataclasses import dataclass, field
 
@@ -8,21 +8,19 @@ import numpy as np
 from .alignment import grid_masks
 from .layout import DEFAULT_LAYOUT, Box, FormLayout
 
-# Thresholds, calibrated on the sample pages (real X marks measure 0.025-0.031).
-MARGIN_PX = 8  # ignore the box border itself
-EMPTY_MAX = 0.005  # less ink than this: empty box
-MARK_MIN = 0.012  # more than this: a clear tick or X
-SCRIBBLE_MIN = 0.30  # more than this: box filled in / scribbled over (crossed out)
-DIRTY_BACKGROUND = 170  # paper inside the box darker than this: mud, can't trust it
+# thresholds tuned on sample pages
+MARGIN_PX = 8  # skip the box border
+EMPTY_MAX = 0.005  # below this: empty
+MARK_MIN = 0.012  # above this: marked
+SCRIBBLE_MIN = 0.30  # above this: scribbled out
+DIRTY_BACKGROUND = 170  # darker paper: mud
 
 
 @dataclass
 class ChoiceReading:
-    """The answer for a group of boxes where exactly one should be marked."""
-
     value: str | None
-    flags: list[str] = field(default_factory=list)  # anything a person should check
-    fill: dict[str, float] = field(default_factory=dict)  # ink share per box, for debugging
+    flags: list[str] = field(default_factory=list)  # things to review
+    fill: dict[str, float] = field(default_factory=dict)  # ink share per box
 
     @property
     def needs_review(self) -> bool:
@@ -33,19 +31,19 @@ class ChoiceReading:
 class CheckboxReport:
     location: ChoiceReading
     shift: ChoiceReading
-    checklist: list[ChoiceReading]  # index 0 = row 1
-    expectations: list[ChoiceReading]  # same order as layout.expectation_questions
+    checklist: list[ChoiceReading]
+    expectations: list[ChoiceReading]
 
 
+# state and ink share of one box
 def box_state(gray: np.ndarray, ink: np.ndarray, seen: np.ndarray | None, box: Box) -> tuple[str, float]:
-    """(state, ink share) for one box."""
     x0, y0, x1, y1 = box
     inner = (slice(y0 + MARGIN_PX, y1 - MARGIN_PX), slice(x0 + MARGIN_PX, x1 - MARGIN_PX))
     fill = float(ink[inner].mean() / 255)
-    background = float(np.percentile(gray[inner], 90))  # the paper colour inside the box
+    background = float(np.percentile(gray[inner], 90))  # paper colour
 
     if seen is not None and seen[inner].min() == 0:
-        state = "not scanned"  # part of the box is outside the scanned area
+        state = "not scanned"
     elif background < DIRTY_BACKGROUND:
         state = "unreadable"
     elif fill >= SCRIBBLE_MIN:
@@ -59,6 +57,7 @@ def box_state(gray: np.ndarray, ink: np.ndarray, seen: np.ndarray | None, box: B
     return state, round(fill, 3)
 
 
+# one answer per group of boxes
 def pick_one(states: dict[str, tuple[str, float]]) -> ChoiceReading:
     marked = [k for k, (state, _) in states.items() if state == "marked"]
     flags = sorted({f"{k}: {state}" for k, (state, _) in states.items() if state not in ("marked", "empty")})
@@ -68,8 +67,8 @@ def pick_one(states: dict[str, tuple[str, float]]) -> ChoiceReading:
     return ChoiceReading(value, flags, {k: fill for k, (_, fill) in states.items()})
 
 
+# find which checklist rows exist
 def checklist_rows(vert: np.ndarray, layout: FormLayout) -> list[tuple[int, int]]:
-    """Find which checklist rows exist: a row exists if its S/R/I/N box borders are drawn."""
     columns = list(layout.checklist_columns.values())
     dividers = [x0 for x0, _ in columns] + [columns[-1][1]]
     present = []
@@ -89,12 +88,13 @@ def checklist_rows(vert: np.ndarray, layout: FormLayout) -> list[tuple[int, int]
     ]
 
 
+# read every checkbox group
 def read_checkboxes(
     aligned: np.ndarray, seen: np.ndarray | None = None, layout: FormLayout = DEFAULT_LAYOUT
 ) -> CheckboxReport:
     ink = cv2.adaptiveThreshold(aligned, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 31, 15)
     horiz, vert = grid_masks(aligned)
-    ink = cv2.bitwise_and(ink, cv2.bitwise_not(horiz | vert))  # drop table lines, keep marks
+    ink = cv2.bitwise_and(ink, cv2.bitwise_not(horiz | vert))  # remove table lines
 
     def group(boxes: dict[str, Box]) -> ChoiceReading:
         return pick_one({k: box_state(aligned, ink, seen, b) for k, b in boxes.items()})

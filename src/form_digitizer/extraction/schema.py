@@ -1,8 +1,4 @@
-"""What we ask the vision-language model for, and how we check its answer.
-
-The prompt and JSON schema are provider-neutral: the same schema works as Gemini's
-response_json_schema, OpenAI's structured-output schema or a Claude tool input_schema.
-"""
+# Prompt, reply schema and reply checks
 
 from typing import Literal
 
@@ -10,7 +6,7 @@ from pydantic import BaseModel
 
 from ..layout import FormLayout
 
-PROMPT_VERSION = "v1"  # bump when the prompt or schema changes so old cache entries aren't reused
+PROMPT_VERSION = "v1"  # bump to invalidate the cache
 
 SYSTEM_PROMPT = """You transcribe scanned, handwritten construction safety observation forms into JSON.
 
@@ -32,8 +28,8 @@ UNCLEAR = "unclear"
 NONE = "none"
 
 
+# JSON schema the model must follow
 def build_response_schema(layout: FormLayout) -> dict:
-    """JSON schema for the model's reply. Allowed codes come from the form layout."""
     text_field = {
         "type": "object",
         "properties": {
@@ -100,9 +96,7 @@ def build_response_schema(layout: FormLayout) -> dict:
     }
 
 
-# Validation of the reply. Structure is checked strictly here; whether a code is one the
-# form actually has (e.g. location "9000") is checked per field in validation.py, so one bad
-# value doesn't throw away the rest of the reply.
+# shape check for the model's reply
 class TextField(BaseModel):
     value: str | None
     status: Literal["ok", "blank", "illegible", "crossed_out", "not_read"]
@@ -134,8 +128,8 @@ class FormRead(BaseModel):
     comments: TextField
 
 
+# empty reply, nothing invented
 def empty_read() -> FormRead:
-    """What we use when no model reply is available: nothing read, nothing invented."""
     not_read = TextField(value=None, status="not_read")
     return FormRead(
         is_safety_form=None,

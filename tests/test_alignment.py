@@ -1,3 +1,5 @@
+# Tests for page alignment
+
 import cv2
 import pytest
 from fakes import mud, perspective, rotate_cropped
@@ -19,7 +21,7 @@ def test_clean_page_aligns_perfectly(aligned_pages):
 def test_tilted_pages_are_straightened(page1, degrees):
     result = align(rotate_cropped(page1, degrees))
     assert result.ok and result.score >= 0.9
-    assert result.scanned_fraction < 1.0  # corners fell outside the scan, and we know it
+    assert result.scanned_fraction < 1.0  # corners were cut off
 
 
 @pytest.mark.parametrize(
@@ -38,6 +40,6 @@ def test_moderate_mud_still_aligns(page1):
 
 
 def test_unsupported_damage_is_refused_not_guessed(page1):
-    """Perspective (phone photo) isn't corrected; alignment must say so instead of returning a bad frame."""
+    # refuse, don't guess
     result = align(perspective(page1))
     assert not result.ok and result.aligned is None
