@@ -1,0 +1,95 @@
+{
+  "is_safety_form": true,
+  "observation_date": {
+    "value": "2024-09-30",
+    "status": "ok"
+  },
+  "observer": {
+    "value": "Maria Hernandez",
+    "status": "ok"
+  },
+  "company_observed": {
+    "value": "Queen's Contracting",
+    "status": "ok"
+  },
+  "timesheet_number": {
+    "value": "49012",
+    "status": "ok"
+  },
+  "employee_number": {
+    "value": "357951",
+    "status": "ok"
+  },
+  "location": "7000",
+  "shift": "Night",
+  "checklist_title": "Critical Devices - Life Saving Action",
+  "checklist": [
+    {
+      "row": 1,
+      "question": "Is a Work Authorization Permit and/or Variance in place and at the work front to bypass/defeat a Safety Critical Device?",
+      "mark": "S"
+    },
+    {
+      "row": 2,
+      "question": "Alternative controls in place to manage risks while Safety Critical Device is defeated?",
+      "mark": "S"
+    },
+    {
+      "row": 3,
+      "question": "Is there an emergency response plan during safety critical device defeat?",
+      "mark": "N"
+    },
+    {
+      "row": 4,
+      "question": "Safety critical device defeat/bypass is documented?",
+      "mark": "N"
+    },
+    {
+      "row": 5,
+      "question": "Safety critical device defeat/bypass is communicated?",
+      "mark": "R"
+    },
+    {
+      "row": 6,
+      "question": "Have crane computer by-passes/alarms been tampered with or disabled?",
+      "mark": "I"
+    },
+    {
+      "row": 7,
+      "question": "Tools equipped with built-in safety features? (spring loaded safety knives, deadman switches, etc.) And safety features not bypassed",
+      "mark": "S"
+    },
+    {
+      "row": 8,
+      "question": "Are tools with triggers being used properly? The trigger is not locked down",
+      "mark": "S"
+    },
+    {
+      "row": 9,
+      "question": "Are tools with guards and handles being used properly",
+      "mark": "I"
+    }
+  ],
+  "expectations": [
+    {
+      "question": "Has positive feedback provided?",
+      "answer": "No"
+    },
+    {
+      "question": "Has the job been stopped in the event of an imminent hazard?",
+      "answer": "No"
+    },
+    {
+      "question": "Has an investigation been conducted?",
+      "answer": "Yes"
+    },
+    {
+      "question": "Have corrective actions been taken?",
+      "answer": "No"
+    }
+  ],
+  "comments": {
+    "value": "Great teamwork and performance.",
+    "status": "ok"
+  }
+}

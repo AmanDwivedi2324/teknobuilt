@@ -1,0 +1,364 @@
+{
+  "source_file": "Sample_input.pdf",
+  "processed_at": "2026-11-19T15:29:21.414366Z",
+  "pipeline_version": "1.0.0",
+  "reader": "gemini-3.5-flash-lite",
+  "summary": {
+    "pages": 4,
+    "ok": 2,
+    "needs_review": 1,
+    "rejected": 1
+  },
+  "pages": [
+    {
+      "page": 1,
+      "status": "ok",
+      "issues": [],
+      "form": {
+        "observation_date": "2024-10-02",
+        "observation_date_raw": "2024-10-02",
+        "observer": "John Davis",
+        "company_observed": "Summit Construction",
+        "location_cwa": "8000",
+        "shift": "Day",
+        "timesheet_number": "25489",
+        "employee_number": "7852",
+        "checklist_title": "Breaking Containment - Life Saving Action",
+        "checklist": [
+          {
+            "row": 1,
+            "question": "Has the location to be cut or opened been visibly marked?",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 2,
+            "question": "Work has been authorized to begin (e.g.– Line Break Permit)",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 3,
+            "question": "Nearby work activities has no potential ignition sources or conflict with work scope (e.g. hot work)",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 4,
+            "question": "Exclusion zone (e.g. barricade) is in place.",
+            "rating": "R",
+            "rating_label": "At Risk"
+          },
+          {
+            "row": 5,
+            "question": "There is clear means of communication with the equipment operator",
+            "rating": "S",
+            "rating_label": "Safe"
+          },
+          {
+            "row": 6,
+            "question": "Workers positioned outside line of fire",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 7,
+            "question": "Spill containment plan in place",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 8,
+            "question": "Energy sources isolated and secured",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          }
+        ],
+        "expectations": [
+          {
+            "question": "Has positive feedback provided?",
+            "answer": "Yes"
+          },
+          {
+            "question": "Has the job been stopped in the event of an imminent hazard?",
+            "answer": "No"
+          },
+          {
+            "question": "Has an investigation been conducted?",
+            "answer": "N/A"
+          },
+          {
+            "question": "Have corrective actions been taken?",
+            "answer": "N/A"
+          }
+        ],
+        "comments": "Safety measures were strictly followed."
+      },
+      "quality": {
+        "ink_ratio": 0.0379,
+        "sharpness": 1458.2,
+        "grid_lines": 108,
+        "skew_deg": 0.0
+      },
+      "alignment": {
+        "aligned": true,
+        "alignment_score": 1.0,
+        "rotation_applied_deg": 0.0,
+        "scanned_fraction": 1.0
+      },
+      "extraction": {
+        "source": "cache",
+        "model": "gemini-3.5-flash-lite",
+        "seconds": 0.0,
+        "error": null
+      }
+    },
+    {
+      "page": 2,
+      "status": "needs_review",
+      "issues": [
+        {
+          "code": "checkbox_mismatch",
+          "message": "pixel count says 1000, model says 2000",
+          "severity": "review",
+          "field": "location_cwa"
+        }
+      ],
+      "form": {
+        "observation_date": "2024-10-01",
+        "observation_date_raw": "2024-10-01",
+        "observer": "Luis Gomez",
+        "company_observed": "Hernandez Builders",
+        "location_cwa": "1000",
+        "shift": "Night",
+        "timesheet_number": "36781",
+        "employee_number": "14589",
+        "checklist_title": "O&I Confined Space – Life Saving Action",
+        "checklist": [
+          {
+            "row": 1,
+            "question": "Proof of Training for CSE Duties (e.g. HH Stickers)",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 2,
+            "question": "Does the crew have a valid confined space permit?",
+            "rating": "N",
+            "rating_label": "N/A"
+          },
+          {
+            "row": 3,
+            "question": "Reliable communication is available for an Emergency (e.g. Hole Watch)",
+            "rating": "N",
+            "rating_label": "N/A"
+          },
+          {
+            "row": 4,
+            "question": "CSE Attendant monitoring entrant status and can communicate with entrants",
+            "rating": "N",
+            "rating_label": "N/A"
+          },
+          {
+            "row": 5,
+            "question": "Access/egress entry ways clear of obstructions?",
+            "rating": "N",
+            "rating_label": "N/A"
+          },
+          {
+            "row": 6,
+            "question": "Controls to prevent unauthorized access (e.g. Barricades, attendant, signs) are in place?",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 7,
+            "question": "Fire extinguisher located near entry point?",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 8,
+            "question": "Does the crew maintain an access/egress record?",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          }
+        ],
+        "expectations": [
+          {
+            "question": "Has positive feedback provided?",
+            "answer": "N/A"
+          },
+          {
+            "question": "Has the job been stopped in the event of an imminent hazard?",
+            "answer": "No"
+          },
+          {
+            "question": "Has an investigation been conducted?",
+            "answer": "Yes"
+          },
+          {
+            "question": "Have corrective actions been taken?",
+            "answer": "Yes"
+          }
+        ],
+        "comments": "Improvements needed in communication."
+      },
+      "quality": {
+        "ink_ratio": 0.0381,
+        "sharpness": 1486.8,
+        "grid_lines": 107,
+        "skew_deg": 0.0
+      },
+      "alignment": {
+        "aligned": true,
+        "alignment_score": 1.0,
+        "rotation_applied_deg": 0.0,
+        "scanned_fraction": 1.0
+      },
+      "extraction": {
+        "source": "cache",
+        "model": "gemini-3.5-flash-lite",
+        "seconds": 0.0,
+        "error": null
+      }
+    },
+    {
+      "page": 3,
+      "status": "ok",
+      "issues": [],
+      "form": {
+        "observation_date": "2024-09-30",
+        "observation_date_raw": "2024-09-30",
+        "observer": "Maria Hernandez",
+        "company_observed": "Queen's Contracting",
+        "location_cwa": "7000",
+        "shift": "Night",
+        "timesheet_number": "49012",
+        "employee_number": "357951",
+        "checklist_title": "Critical Devices - Life Saving Action",
+        "checklist": [
+          {
+            "row": 1,
+            "question": "Is a Work Authorization Permit and/or Variance in place and at the work front to bypass/defeat a Safety Critical Device?",
+            "rating": "S",
+            "rating_label": "Safe"
+          },
+          {
+            "row": 2,
+            "question": "Alternative controls in place to manage risks while Safety Critical Device is defeated?",
+            "rating": "S",
+            "rating_label": "Safe"
+          },
+          {
+            "row": 3,
+            "question": "Is there an emergency response plan during safety critical device defeat?",
+            "rating": "N",
+            "rating_label": "N/A"
+          },
+          {
+            "row": 4,
+            "question": "Safety critical device defeat/bypass is documented?",
+            "rating": "N",
+            "rating_label": "N/A"
+          },
+          {
+            "row": 5,
+            "question": "Safety critical device defeat/bypass is communicated?",
+            "rating": "R",
+            "rating_label": "At Risk"
+          },
+          {
+            "row": 6,
+            "question": "Have crane computer by-passes/alarms been tampered with or disabled?",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          },
+          {
+            "row": 7,
+            "question": "Tools equipped with built-in safety features? (spring loaded safety knives, deadman switches, etc.) And safety features not bypassed",
+            "rating": "S",
+            "rating_label": "Safe"
+          },
+          {
+            "row": 8,
+            "question": "Are tools with triggers being used properly? The trigger is not locked down",
+            "rating": "S",
+            "rating_label": "Safe"
+          },
+          {
+            "row": 9,
+            "question": "Are tools with guards and handles being used properly",
+            "rating": "I",
+            "rating_label": "Imminent Hazard"
+          }
+        ],
+        "expectations": [
+          {
+            "question": "Has positive feedback provided?",
+            "answer": "No"
+          },
+          {
+            "question": "Has the job been stopped in the event of an imminent hazard?",
+            "answer": "No"
+          },
+          {
+            "question": "Has an investigation been conducted?",
+            "answer": "Yes"
+          },
+          {
+            "question": "Have corrective actions been taken?",
+            "answer": "No"
+          }
+        ],
+        "comments": "Great teamwork and performance."
+      },
+      "quality": {
+        "ink_ratio": 0.0411,
+        "sharpness": 1722.7,
+        "grid_lines": 108,
+        "skew_deg": 0.0
+      },
+      "alignment": {
+        "aligned": true,
+        "alignment_score": 1.0,
+        "rotation_applied_deg": 0.0,
+        "scanned_fraction": 1.0
+      },
+      "extraction": {
+        "source": "cache",
+        "model": "gemini-3.5-flash-lite",
+        "seconds": 0.0,
+        "error": null
+      }
+    },
+    {
+      "page": 4,
+      "status": "rejected",
+      "issues": [
+        {
+          "code": "marked_void",
+          "message": "page is marked as a failed or void form",
+          "severity": "reject",
+          "field": null
+        },
+        {
+          "code": "no_form_grid",
+          "message": "no form grid found (not a safety form, or too damaged)",
+          "severity": "reject",
+          "field": null
+        }
+      ],
+      "form": null,
+      "quality": {
+        "ink_ratio": 0.0163,
+        "sharpness": 210.3,
+        "grid_lines": 0,
+        "skew_deg": 0.0
+      },
+      "alignment": null,
+      "extraction": null
+    }
+  ],
+  "errors": []
+}

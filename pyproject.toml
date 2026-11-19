@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "form-digitizer"
+version = "1.0.0"
+description = "Turns scanned, handwritten construction safety observation forms into validated JSON."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pymupdf>=1.24",
+    "opencv-python>=4.9",
+    "numpy>=1.26",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "google-genai>=1.20",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+form-digitizer = "form_digitizer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/form_digitizer/extraction/schema.py" = ["E501"]  # prompt text is prose; don't rewrap it

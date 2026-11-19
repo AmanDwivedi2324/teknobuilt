@@ -1,0 +1,90 @@
+{
+  "is_safety_form": true,
+  "observation_date": {
+    "value": "2024-10-01",
+    "status": "ok"
+  },
+  "observer": {
+    "value": "Luis Gomez",
+    "status": "ok"
+  },
+  "company_observed": {
+    "value": "Hernandez Builders",
+    "status": "ok"
+  },
+  "timesheet_number": {
+    "value": "36781",
+    "status": "ok"
+  },
+  "employee_number": {
+    "value": "14589",
+    "status": "ok"
+  },
+  "location": "2000",
+  "shift": "Night",
+  "checklist_title": "O&I Confined Space – Life Saving Action",
+  "checklist": [
+    {
+      "row": 1,
+      "question": "Proof of Training for CSE Duties (e.g. HH Stickers)",
+      "mark": "I"
+    },
+    {
+      "row": 2,
+      "question": "Does the crew have a valid confined space permit?",
+      "mark": "N"
+    },
+    {
+      "row": 3,
+      "question": "Reliable communication is available for an Emergency (e.g. Hole Watch)",
+      "mark": "N"
+    },
+    {
+      "row": 4,
+      "question": "CSE Attendant monitoring entrant status and can communicate with entrants",
+      "mark": "N"
+    },
+    {
+      "row": 5,
+      "question": "Access/egress entry ways clear of obstructions?",
+      "mark": "N"
+    },
+    {
+      "row": 6,
+      "question": "Controls to prevent unauthorized access (e.g. Barricades, attendant, signs) are in place?",
+      "mark": "I"
+    },
+    {
+      "row": 7,
+      "question": "Fire extinguisher located near entry point?",
+      "mark": "I"
+    },
+    {
+      "row": 8,
+      "question": "Does the crew maintain an access/egress record?",
+      "mark": "I"
+    }
+  ],
+  "expectations": [
+    {
+      "question": "Has positive feedback provided?",
+      "answer": "N/A"
+    },
+    {
+      "question": "Has the job been stopped in the event of an imminent hazard?",
+      "answer": "No"
+    },
+    {
+      "question": "Has an investigation been conducted?",
+      "answer": "Yes"
+    },
+    {
+      "question": "Have corrective actions been taken?",
+      "answer": "Yes"
+    }
+  ],
+  "comments": {
+    "value": "Improvements needed in communication.",
+    "status": "ok"
+  }
+}

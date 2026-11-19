@@ -1,0 +1,90 @@
+{
+  "is_safety_form": true,
+  "observation_date": {
+    "value": "2024-10-02",
+    "status": "ok"
+  },
+  "observer": {
+    "value": "John Davis",
+    "status": "ok"
+  },
+  "company_observed": {
+    "value": "Summit Construction",
+    "status": "ok"
+  },
+  "timesheet_number": {
+    "value": "25489",
+    "status": "ok"
+  },
+  "employee_number": {
+    "value": "7852",
+    "status": "ok"
+  },
+  "location": "8000",
+  "shift": "Day",
+  "checklist_title": "Breaking Containment - Life Saving Action",
+  "checklist": [
+    {
+      "row": 1,
+      "question": "Has the location to be cut or opened been visibly marked?",
+      "mark": "I"
+    },
+    {
+      "row": 2,
+      "question": "Work has been authorized to begin (e.g.– Line Break Permit)",
+      "mark": "I"
+    },
+    {
+      "row": 3,
+      "question": "Nearby work activities has no potential ignition sources or conflict with work scope (e.g. hot work)",
+      "mark": "I"
+    },
+    {
+      "row": 4,
+      "question": "Exclusion zone (e.g. barricade) is in place.",
+      "mark": "R"
+    },
+    {
+      "row": 5,
+      "question": "There is clear means of communication with the equipment operator",
+      "mark": "S"
+    },
+    {
+      "row": 6,
+      "question": "Workers positioned outside line of fire",
+      "mark": "I"
+    },
+    {
+      "row": 7,
+      "question": "Spill containment plan in place",
+      "mark": "I"
+    },
+    {
+      "row": 8,
+      "question": "Energy sources isolated and secured",
+      "mark": "I"
+    }
+  ],
+  "expectations": [
+    {
+      "question": "Has positive feedback provided?",
+      "answer": "Yes"
+    },
+    {
+      "question": "Has the job been stopped in the event of an imminent hazard?",
+      "answer": "No"
+    },
+    {
+      "question": "Has an investigation been conducted?",
+      "answer": "N/A"
+    },
+    {
+      "question": "Have corrective actions been taken?",
+      "answer": "N/A"
+    }
+  ],
+  "comments": {
+    "value": "Safety measures were strictly followed.",
+    "status": "ok"
+  }
+}
