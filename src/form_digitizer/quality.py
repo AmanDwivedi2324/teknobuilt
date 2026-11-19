@@ -84,7 +84,7 @@ def check_quality(gray: np.ndarray | None, text_layer: str = "") -> QualityRepor
     rejected = any(i.severity is Severity.REJECT for i in issues)
     if m["ink_ratio"] > DIRTY_INK and not rejected:
         issues.append(_issue("dirty_page", "page is dirty; some fields may be unreadable", Severity.REVIEW))
-    if m["sharpness"] < MIN_SHARPNESS:
+    if m["sharpness"] < MIN_SHARPNESS and not rejected:
         issues.append(_issue("blurry", "scan is blurry", Severity.REVIEW))
     if abs(m["skew_deg"]) > MAX_SKEW_DEG:
         issues.append(
